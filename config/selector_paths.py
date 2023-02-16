@@ -1,0 +1,5 @@
+select_box_path = '#select2'
+input_box_path = 'body > div > div.container > div > form > table:nth-child(1) > tbody > tr:nth-child(2) > td:nth-child(2) > p > input'
+radio_button_path = '#radiousd'
+submit_button_path = '#button1'
+hsn_descp_path = 'body > div > div.container > div > font'
