@@ -1,4 +1,5 @@
-__pychche__/
+__pycache__/
 config/__pychche__/
 utils/__pychche__/
-DATA/*
+DATA/
+__public_logs__/
