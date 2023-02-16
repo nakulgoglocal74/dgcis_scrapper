@@ -9,7 +9,10 @@ utilities.make_csv(os.path.join('DATA','hsn_descp.csv'),['HSN','DESCP'])
 
 def dgcis_scrapper(hsn_code):
     hsn_code = scrapper_config.check_hsn(hsn_code)
-    if not os.path.isfile(os.path.join('DATA',hsn_code,f'{hsn_code}.csv')):
+    if os.path.isfile(os.path.join('DATA',hsn_code,f'{hsn_code}.csv')):
+        hsn_descp_df = pd.read_csv(os.path.join('DATA','hsn_descp.csv'))
+        header = hsn_descp_df[hsn_descp_df.HSN == int(hsn_code)]['DESCP'].values[0]
+    else:
         driver = selenium_driver.get_driver_object()
         utilities.make_dir(os.path.join('DATA',hsn_code))
         driver.get("https://tradestat.commerce.gov.in/eidb/ecomcntq.asp")
@@ -41,9 +44,11 @@ def dgcis_scrapper(hsn_code):
         driver.stop_client()
         driver.close()
         driver.quit()
-    return os.path.join('DATA',hsn_code,f'{hsn_code}.csv')
+    data_dict = utilities.csv_to_json(os.path.join('DATA',hsn_code,f'{hsn_code}.csv'))
+    return header,data_dict
         
 if __name__ == '__main__':
     hsn_code = '3306'
-    print(dgcis_scrapper(hsn_code))
-
+    t = dgcis_scrapper(hsn_code)
+    print(t[0])
+    print(t[1])
