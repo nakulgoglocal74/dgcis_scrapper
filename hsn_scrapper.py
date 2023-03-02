@@ -48,7 +48,7 @@ def dgcis_scrapper(hsn_code):
     return header,data_dict
         
 if __name__ == '__main__':
-    hsn_code = '3306'
+    hsn_code = '301'
     t = dgcis_scrapper(hsn_code)
     print(t[0])
     print(t[1])
