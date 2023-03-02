@@ -13,6 +13,15 @@ rm -rf /home/nakul/projects/DGCIS/__public_logs__/*
 echo [$(date)]: 'Killing port 8000'
 sudo kill -9 `sudo lsof -t -i:8000`
 
+echo [$(date)]: 'Checking nginx installation'
+if [ "$(dpkg -l | awk '/nginx/ {print }'|wc -l)" -ge 1 ];
+then  
+    echo [$(date)]: 'Package nginx already present. Skipping installation...'
+else
+    echo [$(date)]: 'Package nginx not present. Installing it...'
+    sudo apt install nginx
+fi
+
 echo [$(date)]: 'Updating nginx file'
 sudo echo "server {
     listen 80;
