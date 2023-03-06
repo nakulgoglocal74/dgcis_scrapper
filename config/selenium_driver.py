@@ -38,3 +38,10 @@ def get_select_options(driver,path):
 def get_text(driver,path):
     content = driver.find_element(By.CSS_SELECTOR,path)
     return content.text
+
+def check_element_present(driver,path):
+    content = driver.find_elements(By.CSS_SELECTOR,path)
+    if content:
+        return True 
+    else:
+        return False

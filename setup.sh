@@ -19,6 +19,8 @@ then
     echo [$(date)]: 'Package nginx already present. Skipping installation...'
 else
     echo [$(date)]: 'Package nginx not present. Installing it...'
+    sudo apt update
+    sudo apt upgrade -y
     sudo apt install nginx
 fi
 

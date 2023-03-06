@@ -3,3 +3,4 @@ input_box_path = 'body > div > div.container > div > form > table:nth-child(1) >
 radio_button_path = '#radiousd'
 submit_button_path = '#button1'
 hsn_descp_path = 'body > div > div.container > div > font'
+no_record_tag_path = 'body > div > div.container > div > h2'
