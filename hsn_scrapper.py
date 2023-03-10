@@ -56,7 +56,7 @@ def dgcis_scrapper(hsn_code):
                 data_dict = {}
                 header = ''
         except Exception as e:
-            pass
+            data_dict = {}
         driver.stop_client()
         driver.close()
         driver.quit()

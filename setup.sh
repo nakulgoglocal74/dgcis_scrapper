@@ -1,42 +1,41 @@
 #!/bin/bash
-echo [$(date)]: 'START'
+nginx_port=8000
+app_port=$((nginx_port + 1))
+project_path=/home/nakul/projects/DGCIS
+env_path=/home/nakul/projects/envs/srapper_selenium/bin/activate
+url_file_path=/home/nakul/projects/app_urls.txt
 
-echo [$(date)]: 'CD into project folder'
-cd /home/nakul/projects/DGCIS
+echo [$(date)]: "START"
 
-echo [$(date)]: 'Activate ENV'
-source "/home/nakul/projects/envs/srapper_selenium/bin/activate"
+echo [$(date)]: "CD into project folder"
+cd $project_path
 
-echo [$(date)]: 'Removing previous logs'
-rm -rf /home/nakul/projects/DGCIS/__public_logs__/*
+echo [$(date)]: "Activate ENV"
+source $env_path
 
-echo [$(date)]: 'Killing port 8000'
-sudo kill -9 `sudo lsof -t -i:8000`
+echo [$(date)]: "Removing previous logs"
+rm -rf __public_logs__/
+mkdir __public_logs__/
 
-echo [$(date)]: 'Checking nginx installation'
-if [ "$(dpkg -l | awk '/nginx/ {print }'|wc -l)" -ge 1 ];
-then  
-    echo [$(date)]: 'Package nginx already present. Skipping installation...'
-else
-    echo [$(date)]: 'Package nginx not present. Installing it...'
-    sudo apt update
-    sudo apt upgrade -y
-    sudo apt install nginx
-fi
+echo [$(date)]: "Killing app port ${app_port}"
+sudo kill -9 $(lsof -i:${app_port} -t)
 
-echo [$(date)]: 'Updating nginx file'
+echo [$(date)]: "Killing nginx port ${nginx_port}"
+sudo kill -9 $(lsof -i:${nginx_port} -t)
+
+echo [$(date)]: "Updating nginx file"
 sudo echo "server {
-    listen 80;
+    listen ${nginx_port};
     server_name $(curl icanhazip.com);
     location / {
-        proxy_pass http://127.0.0.1:8000;
+        proxy_pass http://127.0.0.1:${app_port};
     }
 }" > /etc/nginx/sites-enabled/fastapi_nginx
 
-echo [$(date)]: 'Restarting nginx service'
-sudo service nginx restart
+echo [$(date)]: "Starting uvicorn service"
+nohup uvicorn main:app --host 0.0.0.0 --port $app_port --reload >> __public_logs__/out 2>> __public_logs__/error &
 
-echo [$(date)]: 'Starting uvicorn service'
-nohup uvicorn main:app --host 0.0.0.0 --port 8000 --reload >> __public_logs__/out 2>> __public_logs__/error &
+echo [$(date)]: "App started"
+echo "DGCIS:http://$(curl icanhazip.com):$nginx_port" > $url_file_path
 
-echo [$(date)]: 'END'
+echo [$(date)]: "END"

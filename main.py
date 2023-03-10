@@ -22,5 +22,6 @@ async def get_data(data: params):
 #uvicorn main:app --host 0.0.0.0 --port 80 --reload
 #nohup uvicorn main:app --host 0.0.0.0 --port 8000 --reload >> __public_logs__/out 2>> __public_logs__/error &
 #nohup python -u app.py >> __public_logs__/out 2 >> __public_logs__/error &
-#sudo kill -9 `sudo lsof -t -i:8000`
+#sudo kill -9 $(sudo lsof -t -i:8000)
+#sudo kill -9 $(sudo lsof -t -i:9230) #kill chrome tab
     
